@@ -1,0 +1,60 @@
+#!/bin/sh
+# Maven Wrapper script — downloads Maven if not present, then runs it.
+# Based on https://github.com/apache/maven-wrapper
+
+set -e
+
+# Determine project base directory
+if [ -z "$MAVEN_PROJECTBASEDIR" ]; then
+  MAVEN_PROJECTBASEDIR=$(cd "$(dirname "$0")" && pwd)
+  export MAVEN_PROJECTBASEDIR
+fi
+
+WRAPPER_PROPERTIES="$MAVEN_PROJECTBASEDIR/.mvn/wrapper/maven-wrapper.properties"
+WRAPPER_JAR="$MAVEN_PROJECTBASEDIR/.mvn/wrapper/maven-wrapper.jar"
+MAVEN_HOME="${MAVEN_USER_HOME:-${HOME}/.m2/wrapper}"
+
+# Read distribution URL from properties
+if [ -f "$WRAPPER_PROPERTIES" ]; then
+  DIST_URL=$(grep 'distributionUrl' "$WRAPPER_PROPERTIES" | cut -d'=' -f2- | tr -d '\r')
+  WRAPPER_URL=$(grep 'wrapperUrl' "$WRAPPER_PROPERTIES" | cut -d'=' -f2- | tr -d '\r')
+fi
+
+if [ -z "$DIST_URL" ]; then
+  echo "Error: Could not read distributionUrl from $WRAPPER_PROPERTIES" >&2
+  exit 1
+fi
+
+# Extract Maven version from URL
+MVN_VERSION=$(echo "$DIST_URL" | sed 's/.*apache-maven-\(.*\)-bin\.zip/\1/')
+MVN_HOME="$MAVEN_HOME/dists/apache-maven-$MVN_VERSION"
+
+# Download and extract Maven if needed
+if [ ! -d "$MVN_HOME" ]; then
+  echo "Downloading Maven $MVN_VERSION..."
+  mkdir -p "$MAVEN_HOME/dists"
+  TMP_FILE=$(mktemp /tmp/maven-XXXXXX.zip)
+
+  if command -v curl > /dev/null 2>&1; then
+    curl -fsSL -o "$TMP_FILE" "$DIST_URL"
+  elif command -v wget > /dev/null 2>&1; then
+    wget -q -O "$TMP_FILE" "$DIST_URL"
+  else
+    echo "Error: curl or wget required to download Maven" >&2
+    exit 1
+  fi
+
+  unzip -q -d "$MAVEN_HOME/dists" "$TMP_FILE"
+  rm -f "$TMP_FILE"
+  echo "Maven $MVN_VERSION installed to $MVN_HOME"
+fi
+
+# Find java
+if [ -n "$JAVA_HOME" ]; then
+  JAVACMD="$JAVA_HOME/bin/java"
+else
+  JAVACMD="java"
+fi
+
+# Run Maven
+exec "$MVN_HOME/bin/mvn" "$@"
