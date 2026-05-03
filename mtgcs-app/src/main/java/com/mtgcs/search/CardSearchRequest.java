@@ -1,0 +1,13 @@
+package com.mtgcs.search;
+
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+import java.util.List;
+
+public record CardSearchRequest(
+        @NotEmpty
+        @Size(max = 500)
+        List<@NotBlank String> cardNames
+) {}

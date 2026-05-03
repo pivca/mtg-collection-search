@@ -3,7 +3,7 @@ package com.mtgcs.collection;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CollectionMapper {
 
     @Mapping(source = "friend.id", target = "friendId")
