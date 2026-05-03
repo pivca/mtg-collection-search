@@ -108,7 +108,8 @@ public class SearchService {
                         sc.cardPageUrl(),
                         sc.edition(),
                         sc.language(),
-                        sc.foil()
+                        sc.foil(),
+                        sc.setCode()
                 ));
             }
         }

@@ -13,5 +13,6 @@ public record CardMatch(
         String cardPageUrl,
         String edition,
         String language,
-        boolean foil
+        boolean foil,
+        String setCode
 ) {}

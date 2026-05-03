@@ -4,18 +4,9 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import AddIcon from '@mui/icons-material/Add'
 import { useCollections } from '../../hooks/useCollections'
 import { useFriendsStore } from '../../store/friendsStore'
+import { SOURCE_COLORS, SOURCE_LABELS } from '../../lib/sourceConfig'
 import AddCollectionDialog from './AddCollectionDialog'
 import type { Collection } from '../../types'
-
-const SOURCE_COLORS: Record<string, string> = {
-  MOXFIELD: '#5865F2',
-  DECKBOX: '#c9920f',
-}
-
-const SOURCE_LABELS: Record<string, string> = {
-  MOXFIELD: 'Moxfield',
-  DECKBOX: 'Deckbox',
-}
 
 const CollectionCard = ({
   collection,

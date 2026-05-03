@@ -88,15 +88,26 @@ public class DeckboxScraper implements CollectionScraper {
                         rowPrice = priceTd.textContent().trim();
                     }
 
-                    // Details cell: edition, language, foil
+                    // Details cell: edition, language, foil, setCode
                     ElementHandle detailsTd = row.querySelector("td.minimum_width:not(.center)");
                     String edition = null;
                     String language = null;
                     boolean foil = false;
+                    String setCode = null;
                     if (detailsTd != null) {
                         ElementHandle editionSvg = detailsTd.querySelector("div.esym_svg svg[data-title]");
                         if (editionSvg != null) {
                             edition = editionSvg.getAttribute("data-title");
+                            // Class is like "esym_woe  R" — extract the esym_xxx token
+                            String svgClass = editionSvg.getAttribute("class");
+                            if (svgClass != null) {
+                                for (String cls : svgClass.split("\\s+")) {
+                                    if (cls.startsWith("esym_") && cls.length() > 5) {
+                                        setCode = cls.substring(5);
+                                        break;
+                                    }
+                                }
+                            }
                         }
                         ElementHandle langImg = detailsTd.querySelector("img.flag");
                         if (langImg != null) {
@@ -105,7 +116,7 @@ public class DeckboxScraper implements CollectionScraper {
                         foil = detailsTd.querySelector("img[data-title='Foil']") != null;
                     }
 
-                    cards.add(new ScrapedCard(qty, rowPrice, rowCardPageUrl, edition, language, foil));
+                    cards.add(new ScrapedCard(qty, rowPrice, rowCardPageUrl, edition, language, foil, setCode));
                 }
 
                 if (!cards.isEmpty()) {

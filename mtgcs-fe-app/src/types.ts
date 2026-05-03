@@ -35,6 +35,7 @@ export interface CardMatch {
   edition: string | null
   language: string | null
   foil: boolean
+  setCode: string | null
 }
 
 export interface CardSearchResult {

@@ -12,6 +12,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useFriends } from '../../hooks/useFriends'
 import { useFriendsStore } from '../../store/friendsStore'
+import DiscordBadge from '../../components/ui/DiscordBadge'
 import type { Friend } from '../../types'
 
 interface Props {
@@ -51,7 +52,7 @@ const FriendList = ({ onEdit }: Props) => {
         >
           <ListItemText
             primary={friend.displayName}
-            secondary={friend.discordId ? `Discord: ${friend.discordId}` : undefined}
+            secondary={friend.discordId ? <DiscordBadge discordId={friend.discordId} /> : undefined}
           />
           <ListItemSecondaryAction>
             <IconButton
