@@ -1,12 +1,30 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { Box, Button, TextField, Typography, CircularProgress, Alert } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import { useSearch } from '../../hooks/useSearch'
 import CardResultRow from './CardResultRow'
+import type { CardSearchResult } from '../../types'
 
 const SearchPanel = () => {
-  const [input, setInput] = useState('')
-  const { mutate, data: results, isPending, error, reset } = useSearch()
+  const location = useLocation()
+  const locationState = location.state as { input?: string; results?: CardSearchResult[] } | null
+
+  const [input, setInput] = useState(locationState?.input ?? '')
+  const [preloaded, setPreloaded] = useState<CardSearchResult[] | null>(
+    locationState?.results ?? null,
+  )
+  const { mutate, data: mutationResults, isPending, error, reset } = useSearch()
+
+  useEffect(() => {
+    if (locationState?.input !== undefined || locationState?.results !== undefined) {
+      setInput(locationState.input ?? '')
+      setPreloaded(locationState.results ?? null)
+      reset()
+    }
+  }, [location.state]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const results = preloaded ?? mutationResults
 
   const handleSearch = () => {
     const names = input
@@ -14,12 +32,14 @@ const SearchPanel = () => {
       .map((s) => s.trim())
       .filter(Boolean)
     if (names.length === 0) return
+    setPreloaded(null)
     mutate(names)
   }
 
   const handleInputChange = (value: string) => {
     setInput(value)
-    if (results || error) reset()
+    if (preloaded) setPreloaded(null)
+    if (mutationResults || error) reset()
   }
 
   const parsedCount = input

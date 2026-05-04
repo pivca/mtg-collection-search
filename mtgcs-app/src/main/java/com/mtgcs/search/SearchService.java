@@ -2,6 +2,8 @@ package com.mtgcs.search;
 
 import com.mtgcs.collection.Collection;
 import com.mtgcs.collection.CollectionRepository;
+import com.mtgcs.history.ActionType;
+import com.mtgcs.history.HistoryService;
 import com.mtgcs.scraper.CollectionScraper;
 import com.mtgcs.scraper.ScraperRegistry;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,7 @@ public class SearchService {
 
     private final CollectionRepository collectionRepository;
     private final ScraperRegistry scraperRegistry;
+    private final HistoryService historyService;
 
     public List<CardSearchResult> search(Long userId, List<String> cardNames) {
         // Build a normalised lookup: lower-case card name -> original name
@@ -72,9 +75,14 @@ public class SearchService {
             log.warn("Search interrupted");
         }
 
-        return cardNames.stream()
+        List<CardSearchResult> results = cardNames.stream()
                 .map(name -> new CardSearchResult(name.trim(), matchesByCard.getOrDefault(name.trim(), List.of())))
                 .toList();
+
+        String summary = "Searched: " + String.join(", ", cardNames.stream().map(String::trim).toList());
+        historyService.record(userId, ActionType.CARD_SEARCH, summary, results);
+
+        return results;
     }
 
     /** Scrapes a single collection and returns matches grouped by original card name. */

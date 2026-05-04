@@ -3,6 +3,7 @@ import { AppBar, Toolbar, Typography, Box, Button } from '@mui/material'
 import PeopleIcon from '@mui/icons-material/People'
 import SearchIcon from '@mui/icons-material/Search'
 import UserAvatar from './UserAvatar'
+import HistoryPopover from '../../features/history/HistoryPopover'
 
 const NAV_LINK_SX = {
   textTransform: 'none',
@@ -42,6 +43,7 @@ const AppLayout = () => {
           </Button>
 
           <Box sx={{ flex: 1 }} />
+          <HistoryPopover />
           <UserAvatar />
         </Toolbar>
       </AppBar>

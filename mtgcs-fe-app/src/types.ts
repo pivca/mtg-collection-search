@@ -42,3 +42,19 @@ export interface CardSearchResult {
   cardName: string
   matches: CardMatch[]
 }
+
+export type ActionType =
+  | 'CARD_SEARCH'
+  | 'FRIEND_CREATED'
+  | 'FRIEND_UPDATED'
+  | 'FRIEND_DELETED'
+  | 'COLLECTION_ADDED'
+  | 'COLLECTION_DELETED'
+
+export interface HistoryEntry {
+  id: number
+  actionType: ActionType
+  summary: string
+  payload: string | null
+  createdAt: string
+}

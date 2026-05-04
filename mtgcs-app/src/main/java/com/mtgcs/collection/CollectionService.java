@@ -3,6 +3,8 @@ package com.mtgcs.collection;
 import com.mtgcs.friend.Friend;
 import com.mtgcs.friend.FriendNotFoundException;
 import com.mtgcs.friend.FriendRepository;
+import com.mtgcs.history.ActionType;
+import com.mtgcs.history.HistoryService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,10 +15,12 @@ public class CollectionService {
 
     private final CollectionRepository collectionRepository;
     private final FriendRepository friendRepository;
+    private final HistoryService historyService;
 
-    public CollectionService(CollectionRepository collectionRepository, FriendRepository friendRepository) {
+    public CollectionService(CollectionRepository collectionRepository, FriendRepository friendRepository, HistoryService historyService) {
         this.collectionRepository = collectionRepository;
         this.friendRepository = friendRepository;
+        this.historyService = historyService;
     }
 
     public List<Collection> listCollections(Long userId, Long friendId) {
@@ -33,7 +37,10 @@ public class CollectionService {
         validateUrlMatchesSourceType(request.sourceType(), request.sourceUrl());
 
         Collection collection = new Collection(friend, request.sourceType(), request.sourceUrl());
-        return collectionRepository.save(collection);
+        Collection saved = collectionRepository.save(collection);
+        historyService.record(userId, ActionType.COLLECTION_ADDED,
+                "Added collection for " + friend.getDisplayName() + " (" + request.sourceType() + ")", null);
+        return saved;
     }
 
     @Transactional
@@ -45,7 +52,9 @@ public class CollectionService {
             throw new CollectionNotFoundException(collectionId);
         }
 
+        String label = collection.getFriend().getDisplayName() + " (" + collection.getSourceType() + ")";
         collectionRepository.delete(collection);
+        historyService.record(userId, ActionType.COLLECTION_DELETED, "Removed collection for " + label, null);
     }
 
     private void validateUrlMatchesSourceType(SourceType sourceType, String url) {
