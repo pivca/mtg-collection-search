@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -43,6 +44,20 @@ public class SecurityConfig {
                     .userService(discordOAuth2UserService)
                 )
                 .defaultSuccessUrl(frontendUrl, true)
+                .failureHandler((request, response, exception) -> {
+                    String message = exception.getMessage() == null || exception.getMessage().isBlank()
+                            ? "Login failed. Please try again."
+                            : exception.getMessage();
+                    String redirectUrl = UriComponentsBuilder
+                            .fromUriString(frontendUrl)
+                            .path("/error")
+                            .queryParam("message", message)
+                            .build()
+                            .encode()
+                            .toUriString();
+
+                    response.sendRedirect(redirectUrl);
+                })
             )
             .exceptionHandling(ex -> ex
                 .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
