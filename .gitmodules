@@ -1,0 +1,3 @@
+[submodule "mtgcs-fe-app/src/features/submodule-poc"]
+	path = mtgcs-fe-app/src/features/submodule-poc
+	url = git@github-personal:pivca/submodule-poc.git

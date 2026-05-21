@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { AppBar, Toolbar, Typography, Box, Button } from '@mui/material'
+import ExtensionIcon from '@mui/icons-material/Extension'
 import PeopleIcon from '@mui/icons-material/People'
 import SearchIcon from '@mui/icons-material/Search'
 import UserAvatar from './UserAvatar'
@@ -40,6 +41,15 @@ const AppLayout = () => {
             sx={NAV_LINK_SX}
           >
             Search
+          </Button>
+
+          <Button
+            component={NavLink}
+            to="/submodule-poc"
+            startIcon={<ExtensionIcon sx={{ fontSize: 18 }} />}
+            sx={NAV_LINK_SX}
+          >
+            Submodule POC
           </Button>
 
           <Box sx={{ flex: 1 }} />
