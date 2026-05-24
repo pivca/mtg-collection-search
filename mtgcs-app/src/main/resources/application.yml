@@ -3,7 +3,7 @@ spring:
     name: mtgcs-app
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/mtgcs
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/mtgcs}
     username: ${DB_USERNAME:mtgcs}
     password: ${DB_PASSWORD:mtgcs}
 
@@ -37,7 +37,8 @@ spring:
             user-name-attribute: username
 
 server:
-  port: 8090
+  port: ${PORT:8090}
+  forward-headers-strategy: framework
 
 app:
   frontend-url: ${FRONTEND_URL:http://localhost:5173}

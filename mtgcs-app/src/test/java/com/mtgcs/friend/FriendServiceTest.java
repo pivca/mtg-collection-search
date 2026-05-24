@@ -2,6 +2,7 @@ package com.mtgcs.friend;
 
 import com.mtgcs.user.AppUser;
 import com.mtgcs.user.UserRepository;
+import com.mtgcs.history.HistoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +29,9 @@ class FriendServiceTest {
 
     @Mock
     private FriendMapper friendMapper;
+
+    @Mock
+    private HistoryService historyService;
 
     @InjectMocks
     private FriendService friendService;
