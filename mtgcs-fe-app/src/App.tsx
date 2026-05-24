@@ -4,7 +4,6 @@ import AppLayout from './components/ui/AppLayout'
 import ErrorPage from './components/ui/ErrorPage'
 import FriendsPage from './components/ui/FriendsPage'
 import SearchPage from './components/ui/SearchPage'
-import { SubmodulePocPanel } from './features/submodule-poc'
 
 const App = () => {
   return (
@@ -20,7 +19,6 @@ const App = () => {
                   <Route index element={<Navigate to="/friends" replace />} />
                   <Route path="/friends" element={<FriendsPage />} />
                   <Route path="/search" element={<SearchPage />} />
-                  <Route path="/submodule-poc" element={<SubmodulePocPanel />} />
                 </Route>
                 <Route path="*" element={<Navigate to="/friends" replace />} />
               </Routes>
