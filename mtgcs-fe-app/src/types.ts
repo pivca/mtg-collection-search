@@ -43,6 +43,18 @@ export interface CardSearchResult {
   matches: CardMatch[]
 }
 
+export interface FriendBuylist {
+  friendId: number
+  friendName: string
+  cards: string[]
+}
+
+export interface SearchResponse {
+  results: CardSearchResult[]
+  buylist: FriendBuylist[]
+  formattedBuylist: string
+}
+
 export type ActionType =
   | 'CARD_SEARCH'
   | 'FRIEND_CREATED'

@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { SubmodulePocPanel } from 'submodule-poc'
 import { AuthGuard } from './features/auth'
 import AppLayout from './components/ui/AppLayout'
 import ErrorPage from './components/ui/ErrorPage'
 import FriendsPage from './components/ui/FriendsPage'
 import SearchPage from './components/ui/SearchPage'
-import { SubmodulePocPanel } from './features/submodule-poc'
 
 const App = () => {
   return (
