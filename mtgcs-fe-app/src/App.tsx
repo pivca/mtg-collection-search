@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { SubmodulePocPanel } from 'submodule-poc'
 import { AuthGuard } from './features/auth'
 import AppLayout from './components/ui/AppLayout'
 import ErrorPage from './components/ui/ErrorPage'

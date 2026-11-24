@@ -1,30 +1,67 @@
 import { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Box, Button, TextField, Typography, CircularProgress, Alert } from '@mui/material'
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  CircularProgress,
+  Alert,
+  Snackbar,
+} from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import { useSearch } from '../../hooks/useSearch'
 import CardResultRow from './CardResultRow'
-import type { CardSearchResult } from '../../types'
+import type { CardSearchResult, SearchResponse } from '../../types'
 
 const SearchPanel = () => {
   const location = useLocation()
-  const locationState = location.state as { input?: string; results?: CardSearchResult[] } | null
+  const locationState = location.state as {
+    input?: string
+    response?: SearchResponse
+    results?: CardSearchResult[]
+  } | null
 
   const [input, setInput] = useState(locationState?.input ?? '')
-  const [preloaded, setPreloaded] = useState<CardSearchResult[] | null>(
-    locationState?.results ?? null,
+  const [preloaded, setPreloaded] = useState<SearchResponse | null>(
+    locationState?.response ??
+      (locationState?.results
+        ? { results: locationState.results, buylist: [], formattedBuylist: '' }
+        : null),
   )
+  const [copyMessage, setCopyMessage] = useState<string | null>(null)
   const { mutate, data: mutationResults, isPending, error, reset } = useSearch()
 
   useEffect(() => {
-    if (locationState?.input !== undefined || locationState?.results !== undefined) {
-      setInput(locationState.input ?? '')
-      setPreloaded(locationState.results ?? null)
-      reset()
+    if (
+      locationState?.input !== undefined ||
+      locationState?.response !== undefined ||
+      locationState?.results !== undefined
+    ) {
+      let active = true
+
+      queueMicrotask(() => {
+        if (!active) return
+        setInput(locationState.input ?? '')
+        setPreloaded(
+          locationState.response ??
+            (locationState.results
+              ? { results: locationState.results, buylist: [], formattedBuylist: '' }
+              : null),
+        )
+        reset()
+      })
+
+      return () => {
+        active = false
+      }
     }
   }, [location.state]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const results = preloaded ?? mutationResults
+  const response = preloaded ?? mutationResults
+  const results = response?.results
+  const formattedBuylist = response?.formattedBuylist
 
   const handleSearch = () => {
     const names = input
@@ -40,6 +77,17 @@ const SearchPanel = () => {
     setInput(value)
     if (preloaded) setPreloaded(null)
     if (mutationResults || error) reset()
+  }
+
+  const handleCopyFoundByFriend = async () => {
+    if (!formattedBuylist) return
+
+    try {
+      await navigator.clipboard.writeText(formattedBuylist)
+      setCopyMessage('Copied found cards grouped by friend.')
+    } catch {
+      setCopyMessage('Could not copy results. Please try again.')
+    }
   }
 
   const parsedCount = input
@@ -85,6 +133,17 @@ const SearchPanel = () => {
               / {results.length} cards
             </Typography>
           )}
+          {results && (
+            <Button
+              variant="outlined"
+              size="small"
+              startIcon={<ContentCopyIcon />}
+              onClick={handleCopyFoundByFriend}
+              disabled={!formattedBuylist}
+            >
+              Copy found by friend
+            </Button>
+          )}
         </Box>
         {error && (
           <Alert severity="error" onClose={reset}>
@@ -117,6 +176,12 @@ const SearchPanel = () => {
           )}
         </Box>
       </Box>
+      <Snackbar
+        open={Boolean(copyMessage)}
+        autoHideDuration={3000}
+        onClose={() => setCopyMessage(null)}
+        message={copyMessage}
+      />
     </Box>
   )
 }

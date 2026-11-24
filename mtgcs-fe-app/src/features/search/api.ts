@@ -1,5 +1,5 @@
 import { apiClient } from '../../lib/apiClient'
-import type { CardSearchResult } from '../../types'
+import type { SearchResponse } from '../../types'
 
-export const searchCards = (cardNames: string[]): Promise<CardSearchResult[]> =>
-  apiClient.post<CardSearchResult[]>('/search', { cardNames })
+export const searchCards = (cardNames: string[]): Promise<SearchResponse> =>
+  apiClient.post<SearchResponse>('/search', { cardNames })

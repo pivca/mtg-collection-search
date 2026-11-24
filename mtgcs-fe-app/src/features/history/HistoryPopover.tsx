@@ -15,7 +15,7 @@ import HistoryIcon from '@mui/icons-material/History'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { fetchHistory } from './api'
-import type { ActionType, CardSearchResult, HistoryEntry } from '../../types'
+import type { ActionType, CardSearchResult, HistoryEntry, SearchResponse } from '../../types'
 
 const ACTION_LABELS: Record<ActionType, string> = {
   CARD_SEARCH: 'Search',
@@ -106,10 +106,14 @@ const HistoryPopover = () => {
   const handleEntryClick = (entry: HistoryEntry) => {
     if (entry.actionType !== 'CARD_SEARCH' || !entry.payload) return
     try {
-      const results: CardSearchResult[] = JSON.parse(entry.payload)
+      const payload: SearchResponse | CardSearchResult[] = JSON.parse(entry.payload)
+      const response: SearchResponse = Array.isArray(payload)
+        ? { results: payload, buylist: [], formattedBuylist: '' }
+        : payload
+      const results = response.results
       const input = results.map((r) => r.cardName).join('\n')
       setAnchor(null)
-      navigate('/search', { state: { input, results } })
+      navigate('/search', { state: { input, response } })
     } catch {
       // malformed payload — ignore
     }
