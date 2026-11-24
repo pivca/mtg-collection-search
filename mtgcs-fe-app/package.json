@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build --configLoader runner",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest",
+    "test": "vitest --configLoader runner",
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
@@ -20,6 +20,7 @@
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-router-dom": "^7.14.2",
+    "submodule-poc": "file:src/features/submodule-poc",
     "zustand": "^5.0.12"
   },
   "devDependencies": {

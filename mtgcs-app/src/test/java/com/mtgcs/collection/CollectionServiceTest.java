@@ -3,6 +3,7 @@ package com.mtgcs.collection;
 import com.mtgcs.friend.Friend;
 import com.mtgcs.friend.FriendNotFoundException;
 import com.mtgcs.friend.FriendRepository;
+import com.mtgcs.history.HistoryService;
 import com.mtgcs.user.AppUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,9 @@ class CollectionServiceTest {
 
     @Mock
     private FriendRepository friendRepository;
+
+    @Mock
+    private HistoryService historyService;
 
     @InjectMocks
     private CollectionService collectionService;

@@ -1,0 +1,12 @@
+.git
+.idea
+.vscode
+
+mtgcs-fe-app/node_modules
+mtgcs-fe-app/dist
+mtgcs-fe-app/coverage
+
+mtgcs-app/target
+
+*.log
+.DS_Store
